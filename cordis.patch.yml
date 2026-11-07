@@ -29,7 +29,8 @@
 #   - id: win-env-kit
 #     config:
 #       enabledRules: [1, 2, 5, 7, 8]
-#       # ...plus the remaining ruleN fields, restated at their old values
+#       # ruleN may be omitted here: enabledRules decides, and an omitted
+#       # field takes its schema default.
 - insert:
     - id: win-env-kit
       name: 'dsh-win-env-kit'

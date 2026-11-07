@@ -55,7 +55,7 @@ All nine rules are on out of the box. To narrow the set, set `config` on this pl
     rule9: true
 ```
 
-…or name exactly the rules to keep, which wins over the per-rule switches — again inside the same targeted row, restating the per-rule fields:
+…or name exactly the rules to keep, which wins over the per-rule switches, so the per-rule fields can be left out (omitted fields keep their schema default and are then ignored):
 
 ```yaml
 - id: win-env-kit
