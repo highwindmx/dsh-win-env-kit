@@ -59,5 +59,13 @@
   },
   "scripts": {
     "verify": "node scripts/verify-provider.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/highwindmx/dsh-win-env-kit.git"
+  },
+  "homepage": "https://github.com/highwindmx/dsh-win-env-kit#readme",
+  "bugs": {
+    "url": "https://github.com/highwindmx/dsh-win-env-kit/issues"
   }
 }
