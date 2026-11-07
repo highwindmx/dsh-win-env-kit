@@ -21,6 +21,7 @@ const pkgRoot = join(here, '..')
 const mod = await import(pathToFileURL(join(pkgRoot, 'lib', 'index.js')).href)
 const rules = await import(pathToFileURL(join(pkgRoot, 'lib', 'rules.mjs')).href)
 const configModule = await import(pathToFileURL(join(pkgRoot, 'lib', 'config.mjs')).href)
+const hostSchema = await import(pathToFileURL(join(pkgRoot, 'lib', 'host-schema.mjs')).href)
 
 const failures = []
 function check(condition, message) {
@@ -183,11 +184,13 @@ const stubZ = {
 
 let z = stubZ
 let realSchema = false
-try {
-  z = (await import('@deepseek-ai/schemastery')).default
+// Resolve the peer the same way the plugin does: bare specifier first, then a
+// profile-anchored fallback. A linked install has no local node_modules, so a
+// bare import here would report UNDEFINED on exactly the setup we ship into.
+const resolvedZ = await hostSchema.loadHostSchemastery()
+if (resolvedZ) {
+  z = resolvedZ
   realSchema = true
-} catch {
-  // No peer dependency in this checkout; the stub exercises the same shape.
 }
 const built = configModule.defineConfig(z)
 const shape = realSchema ? null : built.shape
@@ -207,7 +210,9 @@ if (!realSchema) {
   }
   check(shape.enabledRules && Array.isArray(shape.enabledRules.fallback), 'Config enabledRules is not a list')
 } else {
-  check(typeof built === 'object' && built !== null, 'defineConfig returned nothing for real schemastery')
+  // A schemastery Schema is callable, so accept both function and object.
+  const builtOk = built !== null && (typeof built === 'object' || typeof built === 'function')
+  check(builtOk, 'defineConfig returned nothing for real schemastery')
   const resolved = z.resolve
     ? z.resolve({}, built)
     : built({})
@@ -215,12 +220,17 @@ if (!realSchema) {
   check(row && row.rule1 === true && row.rule9 === true, 'Config defaults are not all-on')
 }
 
-// Without the peer dependency the plugin deliberately falls back to
-// Config = undefined (every rule on). Only demand the schema when it resolves.
+// A missing schema is not fatal (the loader then accepts any row config and
+// every rule stays on) but it is silent: the per-rule switches stop working.
+// Demand the schema whenever a host copy is reachable, so a broken peer
+// resolution fails here instead of shipping a plugin whose config is ignored.
 check(
   !realSchema || typeof mod.Config === 'object' || typeof mod.Config === 'function',
   'Config was not exported while @deepseek-ai/schemastery resolves (host would accept any row config)'
 )
+if (!realSchema) {
+  console.log('note: no schemastery reachable from this checkout; schema assertions used the stub')
+}
 
 if (failures.length > 0) {
   for (const f of failures) console.error(`FAIL: ${f}`)

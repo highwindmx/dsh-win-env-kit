@@ -4,7 +4,7 @@ A publishable DSH skills bundle that packages the **Windows environment rules** 
 
 - Package: `dsh-win-env-kit`
 - Skill: `win-env-kit`
-- Version: `0.2.0` (independent of any workspace `VERSION` file)
+- Version: `0.2.1` (independent of any workspace `VERSION` file)
 
 ## What is inside
 
