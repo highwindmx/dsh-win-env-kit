@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Windows env kit",
+    "description": "Portable Windows build, encoding, artefact and cleanup rules, with the dependency-free verification tools bundled as skill resources."
+  }
+}

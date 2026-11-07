@@ -1,0 +1,15 @@
+{
+  "id": "dsh-win-env-kit",
+  "version": "0.2.0",
+  "main": "./lib/index.js",
+  "description": "Portable Windows build, encoding, artefact and cleanup rules, with the dependency-free verification tools bundled as skill resources.",
+  "engines": {
+    "dsh": ">=0.1.0-rc.6"
+  },
+  "contributes": {
+    "tools": [],
+    "skills": [
+      "win-env-kit"
+    ]
+  }
+}

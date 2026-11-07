@@ -1,0 +1,84 @@
+# 换行分轨模板 —— 拷到仓库根，改名 .gitattributes
+# 规则来源：AGENTS.md 第 2 节
+# 默认 LF；只有 Windows 脚本语言用 CRLF。
+
+* text=auto eol=lf
+
+# Windows 脚本：CRLF（.ps1 在 5.1 上、.bat/.cmd 在 cmd.exe 上有已知解析坑）
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+*.psd1  text eol=crlf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.reg   text eol=crlf
+
+# 源码 / 配置：强制 LF
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.cjs   text eol=lf
+*.jsx   text eol=lf
+*.py    text eol=lf
+*.json  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.sh    text eol=lf
+*.toml  text eol=lf
+*.ini   text eol=lf
+*.cs    text eol=lf
+*.go    text eol=lf
+*.rs    text eol=lf
+*.c     text eol=lf
+*.h     text eol=lf
+*.cpp   text eol=lf
+*.hpp   text eol=lf
+*.java  text eol=lf
+*.kt    text eol=lf
+*.swift text eol=lf
+*.rb    text eol=lf
+*.php   text eol=lf
+*.sql   text eol=lf
+*.css   text eol=lf
+*.scss  text eol=lf
+*.html  text eol=lf
+*.xml   text eol=lf
+*.svg   text eol=lf
+*.gitignore        text eol=lf
+*.gitattributes    text eol=lf
+*.editorconfig     text eol=lf
+VERSION            text eol=lf
+*.dockerfile       text eol=lf
+Dockerfile         text eol=lf
+Makefile           text eol=lf
+
+# 二进制：禁止 git 做任何换行/编码转换（否则会损坏文件）
+*.exe   binary
+*.dll   binary
+*.pdb   binary
+*.lib   binary
+*.msi   binary
+*.msix  binary
+*.cab   binary
+*.zip   binary
+*.7z    binary
+*.gz    binary
+*.tar   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.bmp   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.mp3   binary
+*.mp4   binary
+*.sqlite binary
+*.db    binary

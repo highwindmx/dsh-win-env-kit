@@ -1,0 +1,63 @@
+{
+  "name": "dsh-win-env-kit",
+  "description": "Portable Windows build, encoding, artefact and cleanup rules for the DeepSeek Harness, with the dependency-free verification tools bundled as skill resources.",
+  "version": "0.2.0",
+  "private": false,
+  "type": "module",
+  "engines": {
+    "dsh": ">=0.1.0-rc.6",
+    "node": ">=20"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "icon": "./icon.svg",
+  "files": [
+    "lib",
+    "skills",
+    "scripts",
+    "locale",
+    "icon.svg",
+    "cordis.patch.yml",
+    "dsh.plugin.json",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/schemastery": "^3.19.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "skills",
+    "windows",
+    "encoding",
+    "utf-8",
+    "gbk",
+    "build",
+    "smart-screen"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "manifestVersion": 1
+  },
+  "scripts": {
+    "verify": "node scripts/verify-provider.mjs"
+  }
+}
