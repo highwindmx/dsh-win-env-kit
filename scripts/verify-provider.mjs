@@ -58,6 +58,7 @@ if (provider) {
   const candidate = list[0]
   check(candidate && candidate.name === 'win-env-kit', `candidate name is ${candidate && candidate.name}, expected 'win-env-kit'`)
   check(candidate && typeof candidate.description === 'string' && candidate.description.length > 0, 'candidate has no description')
+  check(candidate && candidate.description.length <= 500, 'description exceeds the 500-char host catalog truncation limit')
 
   if (candidate) {
     const got = await provider.get(candidate, {})
@@ -85,6 +86,7 @@ if (provider) {
       }
       check(!got.content.includes('**Configured subset:**'), 'default config emitted a subset notice')
       check(!got.description.includes('This install enables rules'), 'default config annotated the description')
+      check(rules.describeSelectionLine(undefined) === '', 'default selection line is not empty')
     }
   }
 
@@ -97,9 +99,16 @@ if (provider) {
     check(offGot.content.includes('\n## 1. '), 'disabling rules 5-6 also dropped rule 1')
     check(offGot.content.includes('**Configured subset:**'), 'a partial selection emitted no subset notice')
     check(
-      offGot.content.includes('Rules 5, 6 are off'),
+      offGot.content.includes('rules 5, 6 are off'),
       'the subset notice does not name the disabled rules'
     )
+    // C: the catalog description and the loaded body must state the SAME
+    // canonical selection sentence, so the trigger text and the skill never
+    // disagree about which rules are live.
+    const selLine = rules.describeSelectionLine({ rule5: false, rule6: false })
+    check(selLine.length > 0, 'describeSelectionLine returned empty for a subset selection')
+    check(offGot.content.includes(selLine), 'the body does not carry the canonical selection sentence')
+    check(offGot.description.includes(selLine), 'the description does not carry the canonical selection sentence')
     check(
       offGot.description.includes('This install enables rules') &&
         offGot.description.includes('rules 5, 6 are off'),

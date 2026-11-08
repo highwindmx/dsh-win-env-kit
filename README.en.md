@@ -67,7 +67,7 @@ What the selection does:
 
 - A disabled rule's `## N.` section is dropped from the body before the model sees it. The preamble, the tool-resolution notes, the verification commands and the host-profile pointer stay.
 - A verification command tagged `# rules 3-4 + 9` goes with its rules; an untagged command always stays. A fence that loses every line is removed rather than left empty.
-- The published description gains `This install enables rules 1, 2, 5, 7, 8; rules 3, 4, 6, 9 are off.` so the trigger text matches the body, and the body opens with a `> **Configured subset:**` notice. A skill that still advertised a rule it no longer contains would be worse than either extreme.
+- The published description and the body's opening `> **Configured subset:**` notice carry the same sentence — `This install enables rules 1, 2, 5, 7, 8; rules 3, 4, 6, 9 are off.` — so the trigger text and the loaded skill never disagree about which rules are live. A skill that still advertised a rule it no longer contains would be worse than either extreme.
 - `config` is replaced wholesale, never deep-merged: restate every field you want to keep. `enabledRules: []` means "let the per-rule switches decide".
 - A value that is not a recognised "off" token (`false`, `"false"`, `0`) leaves the rule on, so a malformed row cannot silently mute the skill.
 
@@ -131,6 +131,8 @@ node tools/dsh-env-lint.mjs . # UTF-8 / LF-CRLF / no U+FFFD / no SCRATCH
 `skills/win-env-kit/tools/` is a byte-for-byte copy of the workspace `tools/`. If a script changes, update both copies and re-check with `Get-FileHash`, then re-run `npm run verify`. `dsh-screenshot.ps1` must stay **pure ASCII + CRLF + no BOM**; all other files are UTF-8 without BOM and LF.
 
 `lib/rules.mjs` holds each rule's number and title, and those titles must match the `## <n>. <title>` headings in `SKILL.md` — `npm run verify` fails if a rule has no section, and a title that drifts only degrades the settings-UI label.
+
+The `SKILL.md` frontmatter `description` is the only trigger text injected into every session's catalog, and the host hard-truncates it to 500 characters. Keep it short and front-load the artefact-shaped triggers (writing a `.ps1`, `.md` or `.csv`, moving or deleting files) rather than the task's goal — a disk-cleanup or inventory task still writes scripts and reports. `npm run verify` fails if the description exceeds 500 characters. The body opens with a load-time self-check that re-matches the plan against that artefact list.
 
 ## License
 

@@ -67,7 +67,7 @@ dsh-win-env-kit/
 
 - 被关掉的规则，它的 `## N.` 整节在模型看到之前就被删掉。前言、脚本路径说明、验证命令、host profile 指针保留。
 - 验证命令行尾标注 `# rules 3-4 + 9` 的会跟着它的规则一起走；没有标注的永远保留。如果一段代码块的行被删空，整段围栏会一起移除，不会留个空壳。
-- 已发布的 description 会追加 `This install enables rules 1, 2, 5, 7, 8; rules 3, 4, 6, 9 are off.`，让触发文本和正文一致；正文开头再加一条 `> **Configured subset:**` 提示。技能正文里已经没有某条规则、触发词却还在宣传它，比这两种极端都糟。
+- 已发布的 description 与正文开头的 `> **Configured subset:**` 提示共用同一句话 —— `This install enables rules 1, 2, 5, 7, 8; rules 3, 4, 6, 9 are off.` —— 保证触发文本和加载后的正文对「哪些规则生效」的说法始终一致。技能正文里已经没有某条规则、触发词却还在宣传它，比这两种极端都糟。
 - `config` 是整份替换、不做深合并：要保留的字段都得重新写出来。`enabledRules: []` 表示「交给每条规则的开关决定」。
 - 不是公认「关闭」取值（`false`、`"false"`、`0`）的值，一律当作开着，这样写坏的配置不会静悄悄把技能阉掉。
 
@@ -130,6 +130,8 @@ node tools/dsh-env-lint.mjs . # UTF-8 / LF-CRLF / 无 U+FFFD / 无 SCRATCH
 `skills/win-env-kit/tools/` 是工作区 `tools/` 的逐字节副本。脚本有改动时两份同步更新，用 `Get-FileHash` 核对，再跑 `npm run verify`。`dsh-screenshot.ps1` 必须保持 **纯 ASCII + CRLF + 无 BOM**；其余文件都是 UTF-8 无 BOM + LF。
 
 `lib/rules.mjs` 里存着每条规则的编号与标题，标题必须和 `SKILL.md` 的 `## <n>. <title>` 一致——缺节的规则会让 `npm run verify` 失败；标题漂移本身只会让设置界面的标签变差。
+
+`SKILL.md` frontmatter 里的 `description` 是唯一会注入每个会话技能目录的触发文本，宿主会硬截断到 500 字符。保持简短，把「按工件形态」的触发词（写 `.ps1` / `.md` / `.csv`、搬移或删除文件）前置，而不是写任务目标——磁盘清理、盘点这类任务照样会写脚本和报告。`npm run verify` 会在 description 超过 500 字符时失败。正文开头有一段「加载后自检」，会把当前计划重新对照这份工件清单。
 
 ## 许可证
 

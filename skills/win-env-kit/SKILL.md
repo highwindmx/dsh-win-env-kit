@@ -1,6 +1,6 @@
 ---
 name: win-env-kit
-description: Use when working on a Windows host with the DeepSeek Harness: writing or running build scripts, packaging a distributable exe/msi/zip, creating or fixing text files in a repo (UTF-8 vs a legacy system code page, CRLF-vs-LF per file type), running a smoke/screenshot test or any transient dev artefact, leaving test processes or scratch docs lying around, having multiple agents edit the same shared doc (README/AGENTS.md/CHANGELOG), a file starting to demand a security confirmation after an agent touched it (ACE / low-integrity / S-1-4 trust marks), needing to capture a child process's output inside the DSH sandbox, or when terminal output shows mojibake/`???`. Covers encoding decisions, line endings, the build-side habits that keep a binary from tripping SmartScreen, the _scratch isolation + screenshot-privacy gate that keeps desktop content out of uploads, the ledger/teardown anti-loop discipline so a manually-stopped process or deleted file never triggers an endless retry, the claim/release edit-lock that stops concurrent agents from clobbering a shared document, and the local trust-mark (ACE) diagnosis + the file-fd child-output capture workaround.
+description: "Use on Windows/DSH before any task that creates, edits or moves files — match the artefacts, not the goal: writing/running a build or ops script (.ps1/.bat/.mjs/.py), packaging an exe/msi/zip, creating/fixing text files (UTF-8/BOM/CRLF-LF), making a report, manifest or CSV, cleaning, moving or deleting files, leaving a one-off script, probe, log or screenshot, a smoke test, mojibake/`???`, a file demanding a security confirmation, or several agents editing one shared doc."
 ---
 
 # Windows environment rules (portable)
@@ -8,6 +8,18 @@ description: Use when working on a Windows host with the DeepSeek Harness: writi
 Nine rules cover almost every failure. Each one names a check you can run, so "done" is observable. Rules 1–4 are about text and binaries; rules 5–8 are about transient dev artefacts, screenshots, the cleanup/anti-loop discipline, and the concurrent-edit lock for shared docs; rule 9 is about local trust marks (ACE / low integrity) that make a file demand a security confirmation after an agent touched it, plus the file-fd workaround for capturing child-process output inside the sandbox.
 
 These rules are **general**. Host-specific measurements (the code page, PowerShell version, screen size, Defender state, certificate availability, the sandbox's exact ACEs) are examples from the machine where the rules were first derived — see [HOST-PROFILE.md](HOST-PROFILE.md). Re-measure them on a new host instead of assuming they match.
+
+## Load-time self-check (do this first)
+
+You loaded this skill from a short catalog summary. The summary lists **artefacts you are about to produce**, not just the task's goal — a disk-cleanup, inventory or "just move some folders" task still writes `.ps1` scripts, `.md`/`.csv` reports, logs and backups, and those are exactly what these rules govern. Before taking any task action, scan your plan for these artefacts:
+
+- any `.ps1` / `.bat` / `.cmd` / `.mjs` / `.py` script you will write or run;
+- any text file, report, manifest, CSV or log you will create or edit;
+- any file you will move, copy, delete or leave behind as a one-off artefact;
+- any screenshot, smoke test, or child process whose output you will capture;
+- any file that unexpectedly starts demanding a security confirmation.
+
+If **any** of these is present, the nine rules below apply — even when the task's headline is about disk space, cleanup, or analysis rather than "writing build scripts". Apply the relevant `**Done when**` checks and the [verification commands](#verification-commands) before you report completion. **Done when** you have matched the plan against this artefact list and can name which rules bind the files you are about to create; if none apply, say so explicitly rather than silently skipping the kit.
 
 ## How to resolve the bundled tools
 

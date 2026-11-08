@@ -1,7 +1,7 @@
 {
   "name": "dsh-win-env-kit",
   "description": "Portable Windows build, encoding, artefact and cleanup rules for the DeepSeek Harness, with the dependency-free verification tools bundled as skill resources.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "type": "module",
   "engines": {
